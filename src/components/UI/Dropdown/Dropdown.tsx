@@ -1,5 +1,4 @@
 import { ReactNode, useEffect, useRef, useState } from "react";
-//import { DropdownItem } from "./DropdownItem";
 import Icon from "../Icons/Icon/Icon";
 import { ColorDefinitions, IconDefinitions, SizeDefinitions } from "../../../lib/utils/definitions";
 import React from "react";
@@ -289,11 +288,18 @@ const Dropdown: React.FC<DropdownProps> = ({
 
         if (!menuRef.current) return;
 
-        const menuRect = menuRef.current.getBoundingClientRect();
         const anchorRect = anchor.getBoundingClientRect();
 
         setOpenSubmenus(prev => {
-            //  alles op dit level en dieper weggooien
+
+            const existing = prev.find(x => x.level === level && x.item.id === item.id);
+
+            // zelfde item opnieuw aangeklikt => toggle dicht
+            if (existing) {
+                return prev.filter(x => x.level < level);
+            }
+
+            // ander item op hetzelfde niveau =>  alles vanaf dit niveau vervangen
             const filtered = prev.filter(x => x.level < level);
 
             return [
@@ -307,6 +313,7 @@ const Dropdown: React.FC<DropdownProps> = ({
             ];
         });
     };
+
 
     // Search
     const filteredMenuItems = menuItems?.filter(item => {
