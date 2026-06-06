@@ -299,7 +299,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                 return prev.filter(x => x.level < level);
             }
 
-            // ander item op hetzelfde niveau =>  alles vanaf dit niveau vervangen
+            // ander item op hetzelfde niveau => alles vanaf dit niveau vervangen
             const filtered = prev.filter(x => x.level < level);
 
             return [
