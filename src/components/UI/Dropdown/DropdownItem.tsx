@@ -50,26 +50,11 @@ export const DropdownItem: React.FC<DropdownItemProps> = ({
         // Normale click action
         item.onClick?.();
 
-        if (closeOnSelect)
+        if (closeOnSelect && !item.keepOpen) {
             closeDropdown();
+        }
     };
 
-
-    // const handleClick = (e: React.MouseEvent) => {
-    //     e.stopPropagation();
-
-    //     if (item.disabled)
-    //         return;
-
-    //     if (hasChildren) {
-    //         setExpanded(prev => !prev);
-    //         return;
-    //     }
-
-    //     item.onClick?.();
-
-    //     if (closeOnSelect) closeDropdown();
-    // };
 
     const itemCss = [
         "dropdown__item",

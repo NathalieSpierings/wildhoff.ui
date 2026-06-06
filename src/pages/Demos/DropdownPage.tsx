@@ -1,8 +1,10 @@
 import React, { ReactElement } from "react";
 import Dropdown, { DropdownMenuItem } from "../../components/UI/Dropdown/Dropdown";
 import { DropdownItem } from "../../components/UI/Dropdown/DropdownItem";
-import { ColorDefinitions } from "../../lib/utils/definitions";
+import { ColorDefinitions, IconDefinitions } from "../../lib/utils/definitions";
 import Fieldset from "../../components/Typography/Fieldset/Fieldset";
+import Checkbox from "../../components/Forms/Checkbox/Checkbox";
+import Icon from "../../components/UI/Icons/Icon/Icon";
 
 const menuItems: DropdownMenuItem[] = [
     { id: "1", content: "Profile", onClick: () => alert("Profile clicked") },
@@ -38,11 +40,11 @@ for (let i = 1; i <= 20; i++) {
 const tabItems = [
     {
         id: "users",
-        label: "Users"
+        content:<Icon icon={IconDefinitions.burger} />
     },
     {
         id: "settings",
-        label: "Settings"
+        content:<Icon icon={IconDefinitions.table_cog} />
     }
 ];
 
@@ -88,25 +90,15 @@ const tabContent = [
                 menuItems: [
                     {
                         id: "theme",
-                        content: (
-                            <label>
-                                <input
-                                    type="checkbox"
-                                />
-                                Dark Theme
-                            </label>
-                        )
+                        content: <span>Dark Theme</span>,
+                        prefix: <Checkbox/>,
+                        keepOpen: true,                      
                     },
                     {
                         id: "notifications",
-                        content: (
-                            <label>
-                                <input
-                                    type="checkbox"
-                                />
-                                Meldingen
-                            </label>
-                        )
+                        content: <span>Meldingen</span>,
+                        prefix: <Checkbox />,
+                        keepOpen: true,
                     }
                 ]
             }
@@ -256,91 +248,208 @@ const DropdownPage = (): ReactElement => {
 
     return (
         <>
-            <h2>Default</h2>
-            <Dropdown
-                trigger={{
-                    label: 'Click me!'
-                }}
-                menuItems={menuItems}
-            />
+            <Fieldset legend="Default" legendBorderColor={ColorDefinitions.Surface} fieldsetCss="mt-3">
+                <div className="grid">
+                    <div>
+                        <h3>Default</h3>
+                        <Dropdown
+                            trigger={{
+                                label: 'Click me!'
+                            }}
+                            menuItems={menuItems}
+                        />
+                    </div>
+                    <div>
+                        <h3 className="mt-3">With header</h3>
+                        <Dropdown
+                            trigger={{
+                                label: 'Click me!'
+                            }}
+                            header={{
+                                content: <strong>
+                                    Application settings
+                                </strong>,
+                                borderColor: ColorDefinitions.Surface
+                            }}
+                            menuItems={menuItems}
+                        />
+                    </div>
+                    <div>
+                        <h2 className="mt-3">With footer</h2>
+                        <Dropdown
+                            trigger={{
+                                label: 'Click me!'
+                            }}
+                            footer={{
+                                content: <button>
+                                    Save
+                                </button>,
+                                borderColor: ColorDefinitions.Surface
+                            }}
+                            menuItems={menuItems}
+                        />
+                    </div>
+                </div>
+            </Fieldset>
+
+            <Fieldset legend="Scroll content" legendBorderColor={ColorDefinitions.Surface} fieldsetCss="mt-3">
+                <div className="grid">
+                    <div>
+                        <h3 className="mt-3">Default with Scroll content</h3>
+                        <Dropdown
+                            trigger={{
+                                label: 'Click me!'
+                            }}
+                            header={{
+                                content: <strong>
+                                    Application settings
+                                </strong>,
+                                borderColor: ColorDefinitions.Surface
+                            }}
+                            footer={{
+                                content: <button>
+                                    Save
+                                </button>,
+                                borderColor: ColorDefinitions.Surface
+                            }}
+                            menuItems={manyMenuItems}
+                        />
+                    </div>
+                    <div>
+
+                        <div>
+                            <h3 className="mt-3">Tabs with scroll content </h3>
+                            <Dropdown
+                                trigger={{
+                                    label: 'Click me!'
+                                }}
+                                header={{
+                                    content: <strong>
+                                        Application settings
+                                    </strong>,
+                                    borderColor: ColorDefinitions.Surface
+                                }}
+                                footer={{
+                                    content: <button>
+                                        Save
+                                    </button>,
+                                    borderColor: ColorDefinitions.Surface
+                                }}
+                                tabItems={tabItems}
+                                tabs={longTabContentItems}
+                            />
+                        </div>
+                    </div>
+                </div>
+            </Fieldset>
 
 
-            <h2 className="mt-3">Header</h2>
-            <Dropdown
-                trigger={{
-                    label: 'Click me!'
-                }}
-                header={{
-                    content: <strong>
-                        Application settings
-                    </strong>,
-                    borderColor: ColorDefinitions.Surface
-                }}
-                menuItems={menuItems}
-            />
+            <Fieldset legend="Search" legendBorderColor={ColorDefinitions.Surface} fieldsetCss="mt-3">
+                <div className="grid">
+                    <div>
+                        <h2 className="mt-3">Default search</h2>
+                        <Dropdown
+                            menuItems={menuItems}
+                            trigger={{ label: 'Click me!' }}
+                            enableSearch
+                            search={{
+                                placeholder: "Zoek een gebruiker...",
+                                noResultsText: "Geen gebruikers gevonden"
+                            }}
+                        />
 
-            <h2 className="mt-3">Footer</h2>
-            <Dropdown
-                trigger={{
-                    label: 'Click me!'
-                }}
-                footer={{
-                    content: <button>
-                        Save
-                    </button>,
-                    borderColor: ColorDefinitions.Surface
-                }}
-                menuItems={menuItems}
-            />
+                    </div>
+                    <div>
+                        <h2 className="mt-3">With header</h2>
+                        <Dropdown
+                            menuItems={menuItems}
+                            trigger={{ label: 'Click me!' }}
+                            header={{ content: (<>Welcome <strong>&nbsp; Guest</strong></>) }}
+                            enableSearch
+                            search={{
+                                placeholder: "Zoek een gebruiker...",
+                                noResultsText: "Geen gebruikers gevonden"
+                            }}
+                        />
+                    </div>
+                    <div>
+                        <h2 className="mt-3">With header with border</h2>
+                        <Dropdown
+                            menuItems={menuItems}
+                            trigger={{ label: 'Click me!' }}
+                            header={{ borderColor: ColorDefinitions.Surface, content: (<>Welcome <strong>&nbsp; Guest</strong></>) }}
+                            enableSearch
+                            search={{
+                                placeholder: "Zoek een gebruiker...",
+                                noResultsText: "Geen gebruikers gevonden"
+                            }}
+                        />
 
-            <h2 className="mt-3">Header and footer</h2>
-            <Dropdown
-                trigger={{
-                    label: 'Click me!'
-                }}
-                header={{
-                    content: <strong>
-                        Application settings
-                    </strong>,
-                    borderColor: ColorDefinitions.Surface
-                }}
-                footer={{
-                    content: <button>
-                        Save
-                    </button>,
-                    borderColor: ColorDefinitions.Surface
-                }}
-                menuItems={menuItems}
-            />
+                    </div>
+                </div>
+            </Fieldset>
 
-            <h2 className="mt-3">Long content</h2>
-            <Dropdown
-                trigger={{
-                    label: 'Click me!'
-                }}
-                menuItems={manyMenuItems}
-            />
-
-            <h2 className="mt-3">Header and footer and long content</h2>
-            <Dropdown
-                trigger={{
-                    label: 'Click me!'
-                }}
-                header={{
-                    content: <strong>
-                        Application settings
-                    </strong>,
-                    borderColor: ColorDefinitions.Surface
-                }}
-                footer={{
-                    content: <button>
-                        Save
-                    </button>,
-                    borderColor: ColorDefinitions.Surface
-                }}
-                menuItems={manyMenuItems}
-            />
-
+            <Fieldset legend="Tabs" legendBorderColor={ColorDefinitions.Surface} fieldsetCss="mt-3">
+                <div className="grid">
+                    <div>
+                        <h2 className="mt-3">Default tabs</h2>
+                        <Dropdown
+                            trigger={{
+                                label: 'Click me!'
+                            }}
+                            tabItems={tabItems}
+                            tabs={tabContent}
+                        />
+                    </div>
+                    <div>
+                        <h2 className="mt-3">With header</h2>
+                        <Dropdown
+                            trigger={{
+                                label: 'Click me!'
+                            }}
+                            header={{
+                                content: <strong>
+                                    Application settings
+                                </strong>,
+                                borderColor: ColorDefinitions.Surface
+                            }}
+                            tabItems={tabItems}
+                            tabs={tabContent}
+                        />
+                    </div>
+                    <div>
+                        <h2 className="mt-3">With footer</h2>
+                        <Dropdown
+                            trigger={{
+                                label: 'Click me!'
+                            }}
+                            footer={{
+                                content: <button>
+                                    Save
+                                </button>,
+                                borderColor: ColorDefinitions.Surface
+                            }}
+                            tabItems={tabItems}
+                            tabs={tabContent}
+                        />
+                    </div>
+                    <div>
+                        <h2 className="mt-3">With search</h2>
+                        <Dropdown
+                            trigger={{
+                                label: 'Click me!'
+                            }}
+                            enableSearch
+                            search={{
+                                placeholder: "Zoek een gebruiker...",
+                                noResultsText: "Geen gebruikers gevonden"
+                            }}
+                            tabItems={tabItems}
+                            tabs={tabContent}
+                        />
+                    </div>
+                </div>
+            </Fieldset>
 
             <Fieldset legend="Horizontal directions" legendBorderColor={ColorDefinitions.Surface} fieldsetCss="mt-3">
 
@@ -394,14 +503,13 @@ const DropdownPage = (): ReactElement => {
                 </div>
             </Fieldset>
 
-
             <Fieldset legend="Vertical directions" legendBorderColor={ColorDefinitions.Surface} fieldsetCss="mt-3">
 
                 <div className="grid">
                     <div>
                         <h2>Down</h2>
                         <Dropdown verticalPlacement="down"
-                             trigger={{
+                            trigger={{
                                 label: 'Click me!'
                             }}
                             header={{
@@ -424,7 +532,7 @@ const DropdownPage = (): ReactElement => {
                     <div>
                         <h2>Up</h2>
                         <Dropdown verticalPlacement="up"
-                             trigger={{
+                            trigger={{
                                 label: 'Click me!'
                             }}
                             header={{
@@ -446,269 +554,6 @@ const DropdownPage = (): ReactElement => {
                     </div>
                 </div>
             </Fieldset>
-
-            <Fieldset legend="Vertical & vertical directions" legendBorderColor={ColorDefinitions.Surface} fieldsetCss="mt-3" >
-
-                <div className="grid">
-                    <div>
-                        <h2>Down left</h2>
-                        <Dropdown verticalPlacement="down" horizontalPlacement="left"
-                             trigger={{
-                                label: 'Click me!'
-                            }}
-                            header={{
-                                content: <strong>
-                                    Application settings
-                                </strong>,
-                                borderColor: ColorDefinitions.Surface
-                            }}
-                            footer={{
-                                content: <button>
-                                    Save
-                                </button>,
-                                borderColor: ColorDefinitions.Surface
-                            }}
-                            tabItems={tabItems}
-                            tabs={tabContent}
-                            maxHeight={350}
-                        />
-                    </div>
-                    <div>
-                        <h2>Down right</h2>
-                        <Dropdown verticalPlacement="down" horizontalPlacement="right"
-                             trigger={{
-                                label: 'Click me!'
-                            }}
-                            header={{
-                                content: <strong>
-                                    Application settings
-                                </strong>,
-                                borderColor: ColorDefinitions.Surface
-                            }}
-                            footer={{
-                                content: <button>
-                                    Save
-                                </button>,
-                                borderColor: ColorDefinitions.Surface
-                            }}
-                            tabItems={tabItems}
-                            tabs={tabContent}
-                            maxHeight={350}
-                        />
-                    </div>
-                </div>
-
-                <div className="grid">
-                    <div>
-                        <h2>Up left</h2>
-                        <Dropdown verticalPlacement="up" horizontalPlacement="left"
-                             trigger={{
-                                label: 'Click me!'
-                            }}
-                            header={{
-                                content: <strong>
-                                    Application settings
-                                </strong>,
-                                borderColor: ColorDefinitions.Surface
-                            }}
-                            footer={{
-                                content: <button>
-                                    Save
-                                </button>,
-                                borderColor: ColorDefinitions.Surface
-                            }}
-                            tabItems={tabItems}
-                            tabs={tabContent}
-                            maxHeight={350}
-                        />
-                    </div>
-                    <div>
-                        <h2>Up right</h2>
-                        <Dropdown verticalPlacement="up" horizontalPlacement="right"
-                             trigger={{
-                                label: 'Click me!'
-                            }}
-                            header={{
-                                content: <strong>
-                                    Application settings
-                                </strong>,
-                                borderColor: ColorDefinitions.Surface
-                            }}
-                            footer={{
-                                content: <button>
-                                    Save
-                                </button>,
-                                borderColor: ColorDefinitions.Surface
-                            }}
-                            tabItems={tabItems}
-                            tabs={tabContent}
-                            maxHeight={350}
-                        />
-                    </div>
-                </div>
-
-            </Fieldset>
-
-
-            <h2 className="mt-3">With tabs</h2>
-            <Dropdown
-                trigger={{
-                    label: 'Click me!'
-                }}
-                tabItems={tabItems}
-                tabs={tabContent}
-            />
-
-            <h2 className="mt-3">With tabs and long content</h2>
-            <Dropdown
-                trigger={{
-                    label: 'Click me!'
-                }}
-                tabItems={tabItems}
-                tabs={longTabContentItems}
-            />
-
-            <h2 className="mt-3">With tabs and header</h2>
-            <Dropdown
-                trigger={{
-                    label: 'Click me!'
-                }}
-                header={{
-                    content: <strong>
-                        Application settings
-                    </strong>,
-                    borderColor: ColorDefinitions.Surface
-                }}
-                tabItems={tabItems}
-                tabs={tabContent}
-            />
-
-            <h2 className="mt-3">With tabs and footer</h2>
-            <Dropdown
-                trigger={{
-                    label: 'Click me!'
-                }}
-                footer={{
-                    content: <button>
-                        Save
-                    </button>,
-                    borderColor: ColorDefinitions.Surface
-                }}
-                tabItems={tabItems}
-                tabs={tabContent}
-            />
-
-
-            <h2 className="mt-3">With tabs and header footer</h2>
-            <Dropdown
-                trigger={{
-                    label: 'Click me!'
-                }}
-                header={{
-                    content: <strong>
-                        Application settings
-                    </strong>,
-                    borderColor: ColorDefinitions.Surface
-                }}
-                footer={{
-                    content: <button>
-                        Save
-                    </button>,
-                    borderColor: ColorDefinitions.Surface
-                }}
-                tabItems={tabItems}
-                tabs={tabContent}
-            />
-
-
-            <h2 className="mt-3">With tabs and header long content and footer</h2>
-            <Dropdown
-                trigger={{
-                    label: 'Click me!'
-                }}
-                header={{
-                    content: <strong>
-                        Application settings
-                    </strong>,
-                    borderColor: ColorDefinitions.Surface
-                }}
-                footer={{
-                    content: <button>
-                        Save
-                    </button>,
-                    borderColor: ColorDefinitions.Surface
-                }}
-                tabItems={tabItems}
-                tabs={longTabContentItems}
-            />
-
-            <h2 className="mt-3">With search </h2>
-            <Dropdown
-                menuItems={menuItems}
-                trigger={{ label: 'Click me!' }}
-                enableSearch
-                search={{
-                    placeholder: "Zoek een gebruiker...",
-                    noResultsText: "Geen gebruikers gevonden"
-                }}
-            />
-
-            <h2 className="mt-3">With search and header with border</h2>
-            <Dropdown
-                menuItems={menuItems}
-                trigger={{ label: 'Click me!' }}
-                header={{ content: (<>Welcome <strong>&nbsp; Guest</strong></>) }}
-                enableSearch
-                search={{
-                    placeholder: "Zoek een gebruiker...",
-                    noResultsText: "Geen gebruikers gevonden"
-                }}
-            />
-
-            <h2 className="mt-3">With search and header</h2>
-            <Dropdown
-                menuItems={menuItems}
-                trigger={{ label: 'Click me!' }}
-                header={{ borderColor: ColorDefinitions.Surface, content: (<>Welcome <strong>&nbsp; Guest</strong></>) }}
-                enableSearch
-                search={{
-                    placeholder: "Zoek een gebruiker...",
-                    noResultsText: "Geen gebruikers gevonden"
-                }}
-            />
-
-            <h2 className="mt-3">With search and header with border and footer and long content</h2>
-            <Dropdown
-                menuItems={manyMenuItems}
-                trigger={{ label: 'Click me!' }}
-                header={{ content: (<>Welcome <strong>&nbsp; Guest</strong></>) }}
-                enableSearch
-                search={{
-                    placeholder: "Zoek een gebruiker...",
-                    noResultsText: "Geen gebruikers gevonden"
-                }}
-                footer={{
-                    content: <button>
-                        Save
-                    </button>,
-                    borderColor: ColorDefinitions.Surface
-                }}
-            />
-
-
-            <h2 className="mt-3">Search With tabs</h2>
-            <Dropdown
-                trigger={{
-                    label: 'Click me!'
-                }}
-                enableSearch
-                search={{
-                    placeholder: "Zoek een gebruiker...",
-                    noResultsText: "Geen gebruikers gevonden"
-                }}
-                tabItems={tabItems}
-                tabs={tabContent}
-            />
         </>
     )
 }

@@ -4,6 +4,11 @@ import SidebarContentPanel from "../components/Layout/Sidebar/SidebarContentPane
 
 export const SidebarDemo = () => {
 
+    const dataItems: SidebarMenuItem[] = [
+        { title: 'DataTable', url: '/demo/datatable' },
+    ];
+
+
     const typoItems: SidebarMenuItem[] = [
         { title: 'Typography', url: '/demo/typography' },
     ];
@@ -36,7 +41,10 @@ export const SidebarDemo = () => {
 
     return (
         <>
-            
+            <SidebarContentPanel>
+                <h4>DataTable</h4>
+            </SidebarContentPanel>
+            <SidebarMenu menuItems={dataItems} />
 
             <SidebarContentPanel>
                 <h4>Form elements</h4>

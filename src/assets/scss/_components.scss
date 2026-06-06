@@ -2,6 +2,7 @@
 
 @layer components;
 
+
 @layer components {
     .content-item {
         display: flex;
@@ -118,9 +119,16 @@
     .dropdown {
         --dropdown-spacing: .5rem;
         --color-background: var(--color-surface-light);
+        --color-hover: var(--shadow-light);
+        --color-selected: var(--shadow-base);
+        --dropdown-radius: var(--radius-lg);
 
         position: relative;
         display: inline-flex;
+
+        &:has(.dropdown__trigger):has(.form-group) {
+            display: flex;
+        }
 
         &__trigger {
             position: relative;
@@ -200,13 +208,20 @@
 
         &__menu {
             position: absolute;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
             overflow: visible;
             left: 0;
+            padding: 0;
+            margin: 0;
             min-width: 22rem;
+            font-size: var(--fs-base);
+            list-style: none;
+            color: var(--color-foreground);
             background: var(--color-background);
-            border-radius: var(--radius-lg);
+            border-radius: var(--dropdown-radius);
             box-shadow: 0 4px 12px rgba(0, 0, 0, .10), 0 2px 4px rgba(0, 0, 0, .05);
-            z-index: 1000;
 
             &--down {
                 top: calc(100% + 4px);
@@ -260,85 +275,51 @@
 
         &__content {
             position: relative;
-            overflow-y: auto;
-            overflow-x: visible;
-            // overflow-y: auto;
-            // overflow-x: hidden;
             max-height: 320px;
-        }
-
-        &__divider {
-            width: 100%;
-            height: 1px;
-            min-height: 1px;
-            flex: 0 0 1px;
-            background: var(--color-border);
-            margin-block: var(--dropdown-spacing);
-        }
-
-        &__tabs {
             display: flex;
-            flex-direction: row;
-            align-items: stretch;
-            width: 100%;
-            border-bottom: 1px solid var(--color-border, #e5e5e5);
-            background: var(--color-surface-secondary, #fafafa);
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+            will-change: transform, opacity;
+            overscroll-behavior: contain;
+            padding-block: var(--dropdown-spacing);
+
+            &:has(.multiselect) {
+                padding-block: 0;
+            }
         }
 
-        &__tab {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex: 1 1 auto;
-            min-height: 40px;
-            padding-inline: 1rem;
-            cursor: pointer;
-            white-space: nowrap;
-            border-bottom: 2px solid transparent;
-            transition: background-color .15s ease, border-color .15s ease;
-
-            &:hover {
-                background: rgba(0, 0, 0, .04);
-            }
-
-            &.active {
-                background: white;
-                border-bottom-color: var(--color-primary);
-                font-weight: 600;
-            }
-
-        }
-
-        &__pane {}
-
-        &__item{
+        &__item {
             position: relative;
             display: flex;
             align-items: center;
             padding: calc(var(--dropdown-spacing) * 1.5) calc(var(--dropdown-spacing) * 2);
             padding-inline: calc(var(--dropdown-spacing) * 2);
-			margin-inline: var(--dropdown-spacing);
-			margin-block: 1px;
-			white-space: nowrap;
-			cursor: pointer;
+            margin-inline: var(--dropdown-spacing);
+            margin-block: 1px;
+            white-space: nowrap;
+            cursor: pointer;
             user-select: none;
-			border-radius: var(--dropdown-radius);
+            border-radius: var(--dropdown-radius);
             background: var(--color-background);
             transition: background-color .12s ease, color .12s ease;
 
             &:hover {
-				color: var(--color-foreground);
-				background: var(--color-hover);
-			}
+                color: var(--color-foreground);
+                background: var(--color-hover);
+            }
+
             &:focus {
                 outline: none;
                 background: var(--color-hover);
             }
 
-			&--selected {
-				color: var(--color-foreground);
-				background: var(--color-selected);
-			}
+            &--selected {
+                color: var(--color-foreground);
+                background: var(--color-selected);
+            }
 
             &--expanded {
                 background: var(--color-background);
@@ -348,6 +329,15 @@
                 opacity: .5;
                 pointer-events: none;
             }
+
+            &__empty {
+				padding: calc(var(--dropdown-spacing) * 1.5) calc(var(--dropdown-spacing) * 2);
+				white-space: nowrap;
+				padding-inline: calc(var(--dropdown-spacing) * 2);
+				margin-inline: var(--dropdown-spacing);
+				margin-block: 1px;
+				display: block;
+			}
 
             &--level-1 {
                 padding-left: 12px;
@@ -365,16 +355,79 @@
                 flex: 1;
                 min-width: 0;
             }
+
+            &.disabled {
+				pointer-events: none;
+				opacity: .67;
+			}
+
+			svg {
+				width: 1.3em;
+				height: 1.3em;
+				fill: currentcolor;
+			}
+
+			.form-field {
+				margin-bottom: 0;
+			}
         }
 
-        
+
+        &__divider {
+            width: 100%;
+				height: 1px;
+				min-height: 1px;
+				flex: 0 0 1px;
+				background: var(--color-border);
+				margin-block: var(--dropdown-spacing);
+        }
+
+        &__tabs {
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            width: 100%;
+            border-bottom: 1px solid var(--color-border);
+            background: var(--color-background);
+        }
+
+        &__tab {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1 1 auto;
+            min-height: 40px;
+            padding: .5rem 1rem;
+            cursor: pointer;
+            white-space: nowrap;
+            border-right: 1px solid var(--color-border);
+            border-bottom: 2px solid transparent;
+            transition: background-color .15s ease, border-color .15s ease;
+
+            &:last-child{
+                border-right:0;
+            }
+
+            &.active {
+                background: var(--color-hover);
+                border-bottom-color: var(--color-primary);
+                font-weight: 600;
+            }
+
+            &:hover {
+                border-bottom-color: var(--color-primary);
+            }          
+
+        }
+      
+
         &__submenu {
             position: fixed;
             z-index: 9999;
 
-           // position: absolute;
-           // overflow: hidden;
-           z-index: 1001;
+            // position: absolute;
+            // overflow: hidden;
+            z-index: 1001;
             pointer-events: auto;
             top: -1px;
             left: calc(100% - 1px);
@@ -383,8 +436,8 @@
             background: var(--color-background);
             border: 1px solid var(--color-border);
             border-radius: 6px;
-            box-shadow:0 4px 12px rgba(0, 0, 0, .10), 0 2px 4px rgba(0, 0, 0, .05);
-           
+            box-shadow: 0 4px 12px rgba(0, 0, 0, .10), 0 2px 4px rgba(0, 0, 0, .05);
+
             &::before {
                 content: "";
                 position: absolute;
@@ -433,15 +486,124 @@
 
         &__empty,
         &__loading {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            min-height: 60px;
-
-            padding: 1rem;
-
-            color: #8c8c8c;
+            padding: calc(var(--dropdown-spacing) * 1.5) calc(var(--dropdown-spacing) * 2);
+				white-space: nowrap;
+				padding-inline: calc(var(--dropdown-spacing) * 2);
+				margin-inline: var(--dropdown-spacing);
+				margin-block: 1px;
+				display: block;
         }
+
+        .bg-surface-light {
+            .dropdown {
+                --color-background: var(--color-surface);
+            }
+        }
+    
+        .bg-surface {
+            .dropdown {
+                --color-background: var(--color-surface-light);
+            }
+        }
+    
+        .bg-surface-dark {
+            .dropdown {
+                --color-background: var(--color-surface);
+            }
+        }
+    
     }
+
+    
+}
+
+@layer datatable{
+    .dg {
+        overflow: scroll;
+        border: 1px solid #ccc;
+        max-height:60vh;
+    }
+    
+    .dg__header,
+    .dg__row {
+        display: grid;
+    }
+    
+    .dg__cell,
+    .dg__hcell {
+        padding: 8px;
+        border-right: 1px solid #ddd;
+        border-bottom: 1px solid #ddd;
+        white-space: nowrap;
+        background: white;
+        position: relative;
+    }
+    
+    .dg__hcell {
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    
+    .dg__hcell__menu {
+        margin-left: auto;
+    }
+    
+    .dg__hcell__resize {
+        position: absolute;
+        right: -4px;
+        top: 0;
+        width: 8px;
+        height: 100%;
+        cursor: col-resize;
+    }
+    
+    .dg__column-menu {
+        position: fixed;
+        background: #fff;
+        border: 1px solid #ccc;
+    }
+    
+    .dg__column-menu__item {
+        padding: 8px;
+        cursor: pointer;
+    }
+    
+    .hidden {
+        display: none;
+    }
+    
+    .dg__modal {
+        position: fixed;
+        inset: 0;
+        background: #0004;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .panel {
+        background: #fff;
+        padding: 20px;
+    }
+    
+    .dg__hcell--pinned-left,
+    .dg__cell--pinned-left {
+        position: sticky;
+        z-index: 3;
+        background: #eef;
+    }
+    
+    .dg__hcell--pinned-right,
+    .dg__cell--pinned-right {
+        position: sticky;
+        z-index: 3;
+        background: #eef;
+    }
+    .dg__hcell--pinned-left,
+    .dg__hcell--pinned-right {
+        z-index: 4;
+    }
+    
 }

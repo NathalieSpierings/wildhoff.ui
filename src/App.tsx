@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RouterProvider, createBrowserRouter, useNavigation } from 'react-router';
 import MainLayout from './components/Layout/Main/MainLayout';
 import { SidebarMenuPlacement } from './components/Layout/Navigation/MainMenu/MainMenu';
@@ -7,6 +8,10 @@ import { proxyPrefix } from './config';
 import { IconDefinitions } from './lib/utils/definitions';
 import { getInitialMenuItem, routes } from './pages/routes';
 import SidebarDemo from './pages/SidebarDemo';
+import { ToastrProvider, useToastr } from './components/Providers/ToastrContext/ToastrContext';
+import Toastr from './components/UI/Toastr/Toastr';
+
+const queryClient = new QueryClient();
 
 const TemplateLayout = () => {
 
@@ -48,6 +53,17 @@ const TemplateLayout = () => {
   )
 }
 
+const TemplateToastr = () => {
+  const { toasts, dequeue } = useToastr();
+
+  return (
+    <Toastr
+      duration={15000}
+      toasts={toasts}
+      removeToastrItem={dequeue}
+    />
+  );
+}
 
 export default function App() {
 
@@ -63,8 +79,14 @@ export default function App() {
   );
 
   return (
-    <LayoutProvider>
-      <RouterProvider router={router} />
-    </LayoutProvider>
+    <QueryClientProvider client={queryClient}>
+      <LayoutProvider>
+        <ToastrProvider>
+          <RouterProvider router={router} />
+          <TemplateToastr />
+        </ToastrProvider>
+      </LayoutProvider>
+    </QueryClientProvider>
+
   )
 }

@@ -5,6 +5,7 @@ import { proxyPrefix } from "../config";
 import HomePage from "./HomePage";
 import DemoPage from "./DemoPage";
 import DropdownPage from "./Demos/DropdownPage";
+import DataTablePage from "./Demos/DataTablePage";
 
 
 export const getInitialMenuItem = (pathname: string) => {
@@ -32,5 +33,9 @@ export const routes = [
 	{
 		path: "/demo/dropdown",
 		element: <DropdownPage />
+	},
+	{
+		path: "/demo/datatable",
+		element: <DataTablePage />
 	},
 ];

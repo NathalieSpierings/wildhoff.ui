@@ -81,13 +81,13 @@ export interface DropdownTrigger {
 // Tabs
 export interface DropdownTabItem {
     id: string;
-    label: string;
+    content: ReactNode;
     disabled?: boolean;
 }
 
 export interface DropdownTabPane {
     id: string;
-    menuItems: DropdownItem[];
+    menuItems: DropdownMenuItem[];
 }
 
 export interface DropdownTab {
@@ -134,6 +134,7 @@ export interface DropdownMenuItem {
     divider?: boolean;
     dividerColor?: ColorDefinitions;
     onClick?: () => void;
+    keepOpen?: boolean;
     children?: DropdownMenuItem[];
 }
 
@@ -368,13 +369,12 @@ const Dropdown: React.FC<DropdownProps> = ({
                 }} />
             )
     );
+
     const triggerCss = [
         "dropdown__trigger",
         open ? "dropdown__trigger--open" : '',
         trigger.dropdownTriggerCss ? trigger.dropdownTriggerCss : ""
     ].filter(Boolean).join(" ");
-
-
 
 
     const menuCss = [
@@ -444,7 +444,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                                     className={activeTab === tab.id ? "dropdown__tab active" : "dropdown__tab"}
                                     onClick={() => setActiveTab(tab.id)}
                                 >
-                                    {tab.label}
+                                    {tab.content}
                                 </button>
                             ))}
                         </div>
@@ -471,17 +471,27 @@ const Dropdown: React.FC<DropdownProps> = ({
                             ))
 
                             /* Menu mode */
-                            : filteredMenuItems?.map((item, idx) => (
+                            :
+                            <>
+                                {
+                                    filteredMenuItems?.length === 0 && (
+                                        <div className="dropdown__item__empty">
+                                            {search?.noResultsText ?? "Geen resultaten gevonden"}
+                                        </div>
+                                    )
+                                }
+                                {filteredMenuItems?.map((item, idx) => (
+                                    <DropdownItem
+                                        key={item.id ?? idx}
+                                        item={item}
+                                        level={1}
+                                        onExpand={handleExpand}
+                                        closeDropdown={() => closeDropdown()}
+                                        closeOnSelect={closeOnSelect}
+                                    />
+                                ))}
+                            </>
 
-                                <DropdownItem
-                                    key={item.id ?? idx}
-                                    item={item}
-                                    level={1}
-                                    onExpand={handleExpand}
-                                    closeDropdown={() => closeDropdown()}
-                                    closeOnSelect={closeOnSelect}
-                                />
-                            ))
                         }
                     </div>
 
