@@ -1,0 +1,190 @@
+import { Meta  } from '@storybook/addon-docs/blocks';
+import ColorSwatch from './ColorSwatch';
+
+<Meta title="Foundation/Colors" />
+
+
+<style>
+  {`
+  	.box {
+  border: 1px solid transparent;
+}
+
+.swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, -webkit-max-content));
+  grid-template-columns: repeat(auto-fit, minmax(250px, max-content));
+  justify-content: start;
+  gap: 1rem;
+  margin-top: 1rem;
+  align-items: flex-start;
+  align-content: flex-start;
+  flex-grow: 1;
+}
+.swatches .swatch {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 0;
+  color: var(--color-foreground);
+  margin-bottom: 2rem;
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+.swatches .swatch__main {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  color: var(--color-foreground);
+  background: var(--color-background);
+  transition: all 0.3s;
+}
+.swatches .swatch__main p {
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 0.5rem;
+}
+.swatches .swatch__main__demo {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+.swatches .swatch__shade {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 1rem;
+  padding: 1rem 2rem;
+  color: var(--color-foreground);
+  background: var(--color-background);
+  transition: all 0.3s;
+}
+.swatches .swatch__shade i {
+  border-bottom: 1px solid var(--color-border);
+}
+.swatches .swatch__shade i::before {
+  content: "Shade";
+  color: var(--color-foreground);
+  font-size: 13px;
+}
+.swatches .swatch__shade__demo {
+  display: none;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+.swatches .swatch__icon {
+  display: inline-flex;
+  height: 36px;
+  width: 36px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  color: var(--color-foreground);
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  -webkit-margin-start: 1rem;
+          margin-inline-start: 1rem;
+}
+.swatches .swatch__icon svg {
+  width: 1.2em;
+  height: 1.2em;
+}
+.swatches .swatch__icon svg path {
+  fill: var(--color-background);
+}
+.swatches .swatch__icon svg path:last-child {
+  fill: var(--color-background);
+}
+
+.colors {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  transition: all 400ms;
+}
+.colors .color {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  position: relative;
+  height: 128px;
+  width: 128px;
+  background: var(--color-background);
+  transition: box-shadow 0.3s ease, background 0.3s ease;
+  box-shadow: inset 0 0 0px 5px rgba(255, 255, 255, 0.5);
+}
+.colors .color__desc {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: var(--color-foreground);
+  font-size: 10px;
+  text-transform: uppercase;
+  padding: 0;
+  font-weight: 400;
+  cursor: text;
+}
+.colors .color__desc span:first-child {
+  padding: 0.5rem auto;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.color-card {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+  position: relative;
+  padding: 0.75rem;
+  color: var(--color-foreground);
+  background: var(--color-background);
+  border-radius: var(--radius);
+  transition: all 0.3s;
+  width: 200px;
+  border-bottom-color: var(--color-border);
+  border-bottom-width: 5px;
+  border-bottom-style: solid;
+}
+.color-card svg {
+  width: 1.5em;
+  height: 1.5em;
+}
+  `}
+</style>
+
+# Colors
+
+<section>
+
+
+<h3>Borders</h3>
+<div className="grid mb-3">
+	<div className="bg-surface-light p-2">
+		<div className="box border-surface-light p-2">I have a border</div>
+	</div>
+	<div className="bg-surface p-2">			
+		<div className="box border-surface p-2">I have a border</div>
+	</div>
+	<div className="bg-surface-dark p-2">
+		<div className="box border-surface p-2">I have a border</div>
+	</div>
+</div>
+
+
+	
+# Theme Colors
+
+<ColorSwatch theme={true} />
+
+
+# Colors
+<ColorSwatch />
+
+</section>
