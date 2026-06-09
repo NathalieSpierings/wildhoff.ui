@@ -437,9 +437,9 @@ const Dropdown: React.FC<DropdownProps> = ({
 
                     {tabItems && (
                         <div className="dropdown__tabs">
-                            {tabItems.map(tab => (
+                            {tabItems.map((tab, idx) => (
                                 <button
-                                    key={tab.id}
+                                    key={tab.id ?? idx}
                                     disabled={tab.disabled}
                                     className={activeTab === tab.id ? "dropdown__tab active" : "dropdown__tab"}
                                     onClick={() => setActiveTab(tab.id)}
@@ -454,12 +454,15 @@ const Dropdown: React.FC<DropdownProps> = ({
                     <div className="dropdown__content" style={{ maxHeight }}>
 
                         {/* Tabs mode */}
+
+
+                     
                         {tabs
-                            ? activePanes.map(pane => (
-                                <div key={pane.id}>
-                                    {pane.menuItems.map(item => (
+                            ? activePanes.map((pane, idx) => (
+                                <div key={pane.id ?? idx}>
+                                    {pane.menuItems.map((item, idx) => (
                                         <DropdownItem
-                                            key={item.id}
+                                            key={item.id ?? idx}
                                             item={item}
                                             level={1}
                                             onExpand={handleExpand}
@@ -496,18 +499,18 @@ const Dropdown: React.FC<DropdownProps> = ({
                     </div>
 
                     {/* Submenu's (Level 2+) */}
-                    {openSubmenus.map(menu => (
+                    {openSubmenus.map((menu, idx) => (
                         <div
-                            key={`${menu.level}-${menu.item.id}`}
+                            key={`${menu.level}-${menu.item.id ?? idx}`}
                             className="dropdown__submenu"
                             style={{
                                 top: menu.top,
                                 left: menu.left
                             }}
                         >
-                            {menu.item.children?.map(child => (
+                            {menu.item.children?.map((child, idx) => (
                                 <DropdownItem
-                                    key={child.id}
+                                    key={child.id ?? idx}
                                     item={child}
                                     level={menu.level + 1}
                                     onExpand={handleExpand}
@@ -517,7 +520,6 @@ const Dropdown: React.FC<DropdownProps> = ({
                             ))}
                         </div>
                     ))}
-
 
                     {footer && (
                         <div className={`dropdown__footer ${footer.borderColor ? "border-" + footer.borderColor : ""}`}>

@@ -12,6 +12,13 @@ const menuItems: DropdownMenuItem[] = [
     { id: "3", content: "Logout", onClick: () => alert("Logout clicked") },
 ];
 
+const menuItemsDivider: DropdownMenuItem[] = [
+    { id: "1", content: "Profile", onClick: () => alert("Profile clicked") },
+    { id: "2", content: "Settings", onClick: () => alert("Settings clicked") },
+    {  id: '4',divider: true},
+    { id: "3", content: "Logout", onClick: () => alert("Logout clicked") },
+];
+
 const manyMenuItems: DropdownMenuItem[] = [];
 for (let i = 1; i <= 20; i++) {
     manyMenuItems.push(
@@ -257,6 +264,15 @@ const DropdownPage = (): ReactElement => {
                                 label: 'Click me!'
                             }}
                             menuItems={menuItems}
+                        />
+                    </div>
+                    <div>
+                        <h3>With devider</h3>
+                        <Dropdown
+                            trigger={{
+                                label: 'Click me!'
+                            }}
+                            menuItems={menuItemsDivider}
                         />
                     </div>
                     <div>

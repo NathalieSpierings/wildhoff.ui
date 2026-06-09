@@ -6,6 +6,10 @@ import { DatagridAction } from "./Config/DatagridAction";
 import { DatagridSortConfig } from "./Config/DatagridSort";
 import { PaginationData } from "./Pagination";
 import Dropdown from "../../UI/Dropdown/Dropdown";
+import Icon from "../../UI/Icons/Icon/Icon";
+import { IconDefinitions } from "../../../lib/utils/definitions";
+import Checkbox from "../../Forms/Checkbox/Checkbox";
+
 
 export type DatagridSortOrder = "asc" | "desc";
 export type PinnedPosition = "left" | "right" | null;
@@ -154,10 +158,127 @@ function Datagrid<TData extends { id: string | number }>({
         return String(transformedValue ?? "");
     }
 
-    return (
-        <div className="dg">
+    function getColumnDropdownItems(
+        prop: string,
+        config: DatagridRowConfig<TData>,
+        state: DatagridColumnState
+    ) {
+        return {
+            tabItems: [
+                {
+                    id: "tabMenu",
+                    content: "Menu",
+                },
+                {
+                    id: "tabColumns",
+                    content: "Kolommen",
+                },
+            ],
+            tabs: [
+                {
+                    tabId: "tabMenu",
+                    tabPane: [
+                        {
+                            id: "menu",
+                            menuItems: [
+                                {
+                                    id: "sort-asc",
+                                    content: "Sorteer oplopend",
+                                    selected: sort?.prop === prop && sort.order === "asc",
+                                    onClick: () => setSort({ prop, order: "asc", }),
+                                },
+                                {
+                                    id: "sort-desc",
+                                    content: "Sorteer aflopend",
+                                    selected: sort?.prop === prop && sort.order === "desc",
+                                    onClick: () => setSort({ prop, order: "desc", }),
+                                },
+                                {
+                                    divider: true,
+                                },
+                                {
+                                    id: "pinning",
+                                    prefix: <Icon icon={IconDefinitions.pin} />,
+                                    content: "Pin column",
+                                    children: [
+                                        {
+                                            id: "pin-left",
+                                            content: "Pin links",
+                                            selected: state.pinned === "left",
+                                            onClick: () => updateColumnState(prop, { pinned: "left" }),
+                                        },
+                                        {
+                                            id: "pin-right",
+                                            content: "Pin rechts",
+                                            selected: state.pinned === "right",
+                                            onClick: () => updateColumnState(prop, { pinned: "right" }),
+                                        },
+                                        {
+                                            id: "pin-none",
+                                            content: "Niet pinnen",
+                                            selected: state.pinned === null,
+                                            onClick: () => updateColumnState(prop, { pinned: null }),
+                                        },
+                                    ]
+                                },
+                                {
+                                    divider: true,
+                                },
+                                {
+                                    id: "autosize",
+                                    content: "Autosize",
+                                    onClick: () => updateColumnState(prop, { width: Math.max(120, config.title.length * 20), }),
+                                },
+                                {
+                                    divider: true,
+                                },
+                                {
+                                    id: "reset-columns",
+                                    content: "Reset kolommen",
+                                    onClick: resetColumns,
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    tabId: "tabColumns",
+                    tabPane: [
+                        {
+                            id: "columns",
+                            menuItems: columnState.map((column) => {
+                                const columnConfig = columns.find(
+                                    (c) => c.prop === column.prop
+                                );
 
-            <div className='dg__header' style={{ gridTemplateColumns: columnWidths }}>
+                                return {
+                                    id: column.prop,
+                                    keepOpen: true,
+                                    selected: column.visible,
+                                    content: (
+                                        <Checkbox
+                                            label={columnConfig?.title ?? column.prop}
+                                            checked={column.visible}
+                                            onChange={(checked) =>
+                                                updateColumnState(column.prop, {
+                                                    visible: checked,
+                                                })
+                                            }
+                                        />
+                                    ),
+                                };
+                            }),
+                        },
+                    ],
+                },
+            ],
+        };
+    }
+
+    return (
+        <div className="smart-grid">
+
+            <div className='smart-grid__header' style={{ gridTemplateColumns: columnWidths }}>
                 {visibleColumns.map(({ config, state }) => {
 
                     const sortable = config.sortable !== false;
@@ -173,9 +294,9 @@ function Datagrid<TData extends { id: string | number }>({
                         <div
                             key={state.prop}
                             className={[
-                                "dg__hcell",
-                                state.pinned === "left" && "dg__hcell--pinned-left",
-                                state.pinned === "right" && "dg__hcell--pinned-right",
+                                "smart-grid__hcell",
+                                state.pinned === "left" && "smart-grid__hcell--pinned-left",
+                                state.pinned === "right" && "smart-grid__hcell--pinned-right",
                                 sortOrder === "asc" && "ascending",
                                 sortOrder === "desc" && "descending",
                             ]
@@ -212,30 +333,27 @@ function Datagrid<TData extends { id: string | number }>({
                             }}
                             onClick={handleSortClick}
                         >
-                            <div className="dg__hcell__container">
-                                <span className="dg__hcell__label">{config.title}</span>
-
-                                <span className="dg__hcell__sort">
+                            <div className="smart-grid__hcell__container">
+                                <span className="smart-grid__hcell__label">{config.title}</span>
+                                <span className="sort-indicator"></span>
+                                {/* <span className="sort-indicator dg__hcell__sort">
                                     {sortOrder === "asc" && "▲"}
                                     {sortOrder === "desc" && "▼"}
-                                </span>
+                                </span> */}
                             </div>
 
-                       
 
-                            <button
-                                type="button"
-                                className="dg__hcell__menu"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    setActiveCol(activeCol === state.prop ? null : state.prop);
+                            <Dropdown
+                                trigger={{
+                                    label: "⋮",
+                                    dropdownTriggerCss: "smart-grid__hcell__menu",
                                 }}
-                            >
-                                ⋮
-                            </button>
+                                closeOnSelect={false}
+                                {...getColumnDropdownItems(state.prop, config, state)}
+                            />
 
                             <div
-                                className="dg__hcell__resize"
+                                className="smart-grid__hcell__resize"
                                 onPointerDown={(e) => {
                                     e.preventDefault();
                                     e.stopPropagation();
@@ -258,75 +376,25 @@ function Datagrid<TData extends { id: string | number }>({
                                     document.addEventListener("pointerup", up);
                                 }}
                             />
-
-                            {activeCol === state.prop && (
-                                <div className="dg__menu" onClick={(e) => e.stopPropagation()}>
-                                    <button onClick={() => handleSorting(state.prop)}                                    >
-                                        Sorteer
-                                    </button>
-
-                                    <button
-                                        onClick={() =>
-                                            updateColumnState(state.prop, { pinned: "left" })
-                                        }
-                                    >
-                                        Pin links
-                                    </button>
-
-                                    <button
-                                        onClick={() =>
-                                            updateColumnState(state.prop, { pinned: "right" })
-                                        }
-                                    >
-                                        Pin rechts
-                                    </button>
-
-                                    <button
-                                        onClick={() =>
-                                            updateColumnState(state.prop, { pinned: null })
-                                        }
-                                    >
-                                        Niet pinnen
-                                    </button>
-
-                                    <button
-                                        onClick={() =>
-                                            updateColumnState(state.prop, {
-                                                width: Math.max(120, config.title.length * 20),
-                                            })
-                                        }
-                                    >
-                                        Autosize
-                                    </button>
-
-                                    <button
-                                        onClick={() =>
-                                            updateColumnState(state.prop, { visible: false })
-                                        }
-                                    >
-                                        Verberg kolom
-                                    </button>
-                                </div>
-                            )}
                         </div>
                     );
                 })}
             </div>
 
-            <div className="dg__body">
+            <div className="smart-grid__body">
                 {data.map((item) => (
                     <div
                         key={item.id}
-                        className="dg__row"
-                        style={{ columnWidths }}
+                        className="smart-grid__row"
+                        style={{ gridTemplateColumns: columnWidths }}
                     >
                         {visibleColumns.map(({ config, state }) => (
                             <div
                                 key={state.prop}
                                 className={[
-                                    "dg__cell",
-                                    state.pinned === "left" && "dg__cell--pinned-left",
-                                    state.pinned === "right" && "dg__cell--pinned-right",
+                                    "smart-grid__cell",
+                                    state.pinned === "left" && "smart-grid__cell--pinned-left",
+                                    state.pinned === "right" && "smart-grid__cell--pinned-right",
                                 ]
                                     .filter(Boolean)
                                     .join(" ")}
@@ -348,7 +416,7 @@ function Datagrid<TData extends { id: string | number }>({
                 ))}
             </div>
 
-            <div className="dg__footer">
+            <div className="smart-grid__footer">
                 <span>{total} resultaten</span>
 
                 <button onClick={resetColumns}>Reset kolommen</button>

@@ -65,7 +65,29 @@ export const DropdownItem: React.FC<DropdownItemProps> = ({
 
     return (
         <>
-            <div ref={itemRef}
+            {item.divider ? (
+                <div className="dropdown__divider" />
+            ) :
+                (
+                    <div ref={itemRef}
+                        className={itemCss}
+                        onClick={handleClick}
+                        style={{
+                            paddingLeft: `${12 + level * 16}px`
+                        }}
+                    >
+                        <ContentItem
+                            item={{
+                                ...item,
+                                postfix: item.children?.length
+                                    ? <Icon icon={IconDefinitions.angle_right} />
+                                    : item.postfix
+                            }}
+                        />
+                    </div>
+                )
+            }
+            {/* <div ref={itemRef}
                 className={itemCss}
                 onClick={handleClick}
                 style={{
@@ -80,11 +102,11 @@ export const DropdownItem: React.FC<DropdownItemProps> = ({
                             : item.postfix
                     }}
                 />
-
+                
                 {item.divider && (
                     <div className="dropdown__divider" />
-                )}
-            </div>
+                )} 
+            </div> */}
         </>
     )
 }
